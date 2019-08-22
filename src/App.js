@@ -1,8 +1,11 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { usePeople } from "./hooks-examples/custom";
 
 function App() {
+  let people = usePeople();
+
   return (
     <div className="App">
       <header className="App-header">
@@ -19,6 +22,9 @@ function App() {
           Learn React
         </a>
       </header>
+      <ul>
+        {people && people.map(person => <li key={person.id}>{person.name}</li>)}
+      </ul>
     </div>
   );
 }
