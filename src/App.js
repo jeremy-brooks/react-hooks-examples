@@ -6,10 +6,11 @@ import { ShowWhoIsOnline } from "./hooks-examples/ShowWhoIsOnline";
 function App() {
   return (
     <div className="App container">
-      <h1>Show all the people</h1>
+      <h1>React Hooks examples</h1>
+      <h2>Show all people</h2>
       <DisplayNames />
 
-      <h1>Show who is online</h1>
+      <h2>Show who is online</h2>
       <ShowWhoIsOnline />
     </div>
   );
