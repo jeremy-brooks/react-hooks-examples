@@ -1,12 +1,44 @@
 import { useState, useEffect } from "react";
+import React from "react";
+import { peopleService } from "./usePeopleService";
 
-export const peopleData = [
-  { id: 1, name: "Ann" },
-  { id: 2, name: "Sue" },
-  { id: 3, name: "John" },
-  { id: 4, name: "Jo" }
-];
+export function useMembers() {
+  let [people, setPeople] = useState([]);
 
-export function usePeople() {
-  return peopleData;
+  useEffect(() => {
+    setPeople(peopleService.get());
+  }, []);
+
+  return people;
+}
+
+export function ShowWhoIsOnline() {
+  let members = useMembers();
+
+  return (
+    <ul>
+      {members.map(member => (
+        <li
+          key={member.id}
+          style={{ color: member.isOnline ? "green" : "red" }}
+        >
+          {member.name}
+          {" is "}
+          {member.isOnline ? "Online" : "Offline"}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function DisplayNames() {
+  let members = useMembers();
+
+  return (
+    <ul>
+      {members.map(member => (
+        <li key={member.id}>{member.name}</li>
+      ))}
+    </ul>
+  );
 }
