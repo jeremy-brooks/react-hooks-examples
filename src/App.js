@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
-import { DisplayNames, ShowWhoIsOnline } from "./hooks-examples/custom";
+import { DisplayNames } from "./hooks-examples/DisplayNames";
+import { ShowWhoIsOnline } from "./hooks-examples/ShowWhoIsOnline";
 
 function App() {
   return (
