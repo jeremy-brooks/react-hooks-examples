@@ -1,7 +1,9 @@
 import React from "react";
 import { useMembers } from "./custom";
-import { render, unmountComponentAtNode } from "react-dom";
+import { render } from "react-dom";
 import { act } from "react-dom/test-utils";
+import { HookTestWrapper } from "./hookTestWrapper";
+import { setupContainer, teardownContainer } from "./setupAndTeardown";
 
 const mockData = [
   { id: 1, name: "Ann", isOnline: true },
@@ -17,34 +19,24 @@ jest.mock("./peopleService", () => {
 });
 
 let container = null;
+
 beforeEach(() => {
-  // setup a DOM element as a render target
-  container = document.createElement("div");
-  document.body.appendChild(container);
+  container = setupContainer();
 });
 
 afterEach(() => {
-  // cleanup on exiting
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
+  teardownContainer(container);
 });
 
-const WrapperToTestHook = ({ hookCallback }) => {
-  hookCallback();
-  return null;
-};
-
-const testHook = callback => {
-  render(<WrapperToTestHook hookCallback={callback} />, container);
-};
-
 describe("Use members", () => {
-  it("should return a list", () => {
+  it("should return a list of members", () => {
     let members;
 
     act(() => {
-      testHook(() => (members = useMembers()));
+      render(
+        <HookTestWrapper hookCallback={() => (members = useMembers())} />,
+        container
+      );
     });
 
     expect(members).toEqual(mockData);
