@@ -1,37 +1,52 @@
-import { usePeople, peopleData } from "./custom";
-import { usePeopleService } from "./usePeopleService";
-import { useState } from "react";
+import React from "react";
+import { useMembers } from "./custom";
+import { render, unmountComponentAtNode } from "react-dom";
+import { act } from "react-dom/test-utils";
 
-let mockState;
+const mockData = [
+  { id: 1, name: "Ann", isOnline: true },
+  { id: 3, name: "Jeremy" }
+];
 
-const mockUseState1 = initialState => {
-  mockState = initialState;
-  const setter = newState => {
-    mockState = newState;
+jest.mock("./peopleService", () => {
+  return {
+    peopleService: {
+      get: () => mockData
+    }
   };
-  return [mockState, setter];
+});
+
+let container = null;
+beforeEach(() => {
+  // setup a DOM element as a render target
+  container = document.createElement("div");
+  document.body.appendChild(container);
+});
+
+afterEach(() => {
+  // cleanup on exiting
+  unmountComponentAtNode(container);
+  container.remove();
+  container = null;
+});
+
+const WrapperToTestHook = ({ hookCallback }) => {
+  hookCallback();
+  return null;
 };
 
-jest.mock("react", () => {
-  return {
-    useState: jest.fn(),
-    useEffect: jest.fn()
-  };
-});
+const testHook = callback => {
+  render(<WrapperToTestHook hookCallback={callback} />, container);
+};
 
-describe("Use people", () => {
+describe("Use members", () => {
   it("should return a list", () => {
-    useState.mockImplementationOnce(mockUseState1);
-    expect(Array.isArray(usePeople())).toBeTruthy();
-    expect(usePeople()).toEqual([
-      { id: 1, name: "Ann" },
-      { id: 2, name: "Sue" },
-      { id: 3, name: "John" },
-      { id: 4, name: "Jo" }
-    ]);
-  });
-});
+    let members;
 
-it("should get a list of people from the people service", () => {
-  expect(usePeopleService()).toBe(peopleData);
+    act(() => {
+      testHook(() => (members = useMembers()));
+    });
+
+    expect(members).toEqual(mockData);
+  });
 });
