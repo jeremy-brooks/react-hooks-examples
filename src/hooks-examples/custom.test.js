@@ -3,7 +3,7 @@ import { useMembers } from "./custom";
 import { render } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { HookTestWrapper } from "./hookTestWrapper";
-import { setupContainer, teardownContainer } from "./setupAndTeardown";
+import { setupTestContainer, teardownTestContainer } from "./setupAndTeardown";
 
 const mockData = [
   { id: 1, name: "Ann", isOnline: true },
@@ -21,11 +21,11 @@ jest.mock("./peopleService", () => {
 let container = null;
 
 beforeEach(() => {
-  container = setupContainer();
+  container = setupTestContainer();
 });
 
 afterEach(() => {
-  teardownContainer(container);
+  teardownTestContainer(container);
 });
 
 describe("Use members", () => {
