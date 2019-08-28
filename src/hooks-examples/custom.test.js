@@ -3,7 +3,7 @@ import { useMembers } from "./custom";
 import { render } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { HookTestWrapper } from "./hookTestWrapper";
-import { setupTestContainer, teardownTestContainer } from "./setupAndTeardown";
+import { setupTestContainer, teardownTestContainer } from "./testContainer";
 
 const mockData = [
   { id: 1, name: "Ann", isOnline: true },
@@ -19,9 +19,16 @@ jest.mock("./peopleService", () => {
 });
 
 let container = null;
+let members;
 
 beforeEach(() => {
   container = setupTestContainer();
+  act(() => {
+    render(
+      <HookTestWrapper hookCallback={() => (members = useMembers())} />,
+      container
+    );
+  });
 });
 
 afterEach(() => {
@@ -29,16 +36,11 @@ afterEach(() => {
 });
 
 describe("Use members", () => {
+  it("should return an iterable thing", () => {
+    expect(Array.isArray(members)).toBeTruthy();
+  });
+
   it("should return a list of members", () => {
-    let members;
-
-    act(() => {
-      render(
-        <HookTestWrapper hookCallback={() => (members = useMembers())} />,
-        container
-      );
-    });
-
     expect(members).toEqual(mockData);
   });
 });

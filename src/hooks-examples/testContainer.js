@@ -8,7 +8,6 @@ export const setupTestContainer = () => {
 };
 
 export const teardownTestContainer = container => {
-  // cleanup on exiting
   unmountComponentAtNode(container);
   container.remove();
   container = null;
